@@ -43,6 +43,7 @@ dev            → PR to main → main → production
 - Failed E2E runs retain Playwright traces, screenshots, video, and the HTML report for seven days.
 - Concurrency cancels stale runs on the same branch so an older commit cannot deploy after a newer one.
 - Deployments require the repository variable `DEPLOYMENTS_ENABLED=true`. Keep it `false` until both GitHub Environments contain valid Cloudflare credentials.
+- Each deployment snapshots every Cloudflare MX/TXT record before publishing and verifies the same normalized record set afterward. Missing DNS-read access or any mail-record change fails the workflow.
 
 Protect both branches in GitHub. Require the `Validate and E2E` check and pull requests; disallow direct pushes to `main`. Promote staging through a `dev` → `main` pull request rather than merging unrelated changes directly into production.
 

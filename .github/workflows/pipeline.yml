@@ -67,12 +67,22 @@ jobs:
         run: npm ci
       - name: Build site
         run: npm run build
+      - name: Snapshot protected mail DNS records
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/verify-cloudflare-dns.mjs snapshot .dns-before.json
       - name: Deploy staging Worker
         uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --env staging --var GIT_COMMIT_SHA:${{ github.sha }}
+      - name: Verify protected mail DNS records are unchanged
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/verify-cloudflare-dns.mjs compare .dns-before.json
       - name: Verify staging endpoints and content
         env:
           SITE_URL: https://dev.pascual-labs.com
@@ -115,12 +125,22 @@ jobs:
         run: npm ci
       - name: Build site
         run: npm run build
+      - name: Snapshot protected mail DNS records
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/verify-cloudflare-dns.mjs snapshot .dns-before.json
       - name: Deploy production Worker
         uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --env="" --var GIT_COMMIT_SHA:${{ github.sha }}
+      - name: Verify protected mail DNS records are unchanged
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/verify-cloudflare-dns.mjs compare .dns-before.json
       - name: Verify production endpoints, content, and canonical redirect
         env:
           SITE_URL: https://pascual-labs.com
