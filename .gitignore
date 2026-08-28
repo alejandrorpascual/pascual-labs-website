@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.wrangler/
+.wrangler-dry-run/
+playwright-report/
+test-results/
+.DS_Store
+
+# Unrelated documents stored beside this project
+ai-native-product-engineer-career-plan-spec.md
+alejandro-ai-product-engineer-portfolio.html

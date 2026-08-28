@@ -1,0 +1,24 @@
+{
+  "name": "pascual-labs-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "check:worker": "wrangler deploy --env=\"\" --dry-run --outdir .wrangler-dry-run/production && wrangler deploy --env staging --dry-run --outdir .wrangler-dry-run/staging",
+    "dev": "npm run build && wrangler dev",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test --project=desktop-chromium",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run build && npm run typecheck && npm test && npm run check:content && npm run check:worker"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@cloudflare/workers-types": "5.20260827.1",
+    "@playwright/test": "1.62.1",
+    "typescript": "7.0.2",
+    "wrangler": "4.127.0"
+  }
+}
